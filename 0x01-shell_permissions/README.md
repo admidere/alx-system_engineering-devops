@@ -1,9 +1,9 @@
-Write a script that sets the permission to the file hello as follows:
+Write a script that sets the mode of the file hello to this:
 
 
 
-Owner: no permission at all
+-rwxr-x-wx 1 julien julien 23 Sep 20 14:25 hello
 
-Group: no permission at all
+The file hello will be in the working directory
 
-Other users: all the permissions
+You are not allowed to use commas for this script
