@@ -1,1 +1,1 @@
-Display the first 10 lines of /etc/passwd
+0x02. Shell, I/O Redirections and filters
