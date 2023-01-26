@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
-#Printing "Best School" 10 times using while loop
+#printing "Best School" string 10 times
 
-i=1
-while [ $i -le 10 ]
+for i in {1..10}
 do
 	echo "Best School"
-	(( i++ ))
 done
 	export i
