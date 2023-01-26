@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-#printing "Best School" string 10 times
+# This script is displaying "Best School" 10 times
 
-for i in {1..10}
+for (( i = 0; i < 10; i++ ))
 do
-	echo "Best School"
+    echo "Best School"
 done
-	export i
+    export i
