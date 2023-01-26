@@ -4,20 +4,19 @@
 #Displays Buzz when the number is a multiple of 5
 #Otherwise, displays the number
 
-i=0
-while [ $i -le 100 ]
+for i in {1..100}
 do
-  if (( num % 3 == 0 && num % 5 == 0 ))
-  then
-    echo "FizzBuzz"
-  elif (( num % 3 == 0 ))
-  then
-    echo "Fizz"
-  elif (( num % 5 == 0 ))
-  then
-    echo "Buzz"
-  else
-    echo "$num"
-  fi
-  (( i++ ))
+	if ( (( i%3 == 0 )) && (( i%5 == 0)) )
+	then
+		echo "FizzBuzz"
+	elif (( i%3 == 0 ))
+	then
+		echo "Fizz"
+	elif (( i%5 == 0 ))
+	then
+		echo "Buzz"
+	else	
+		echo "$i"
+	fi
 done
+export i
