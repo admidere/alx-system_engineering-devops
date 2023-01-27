@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# This script displays lines containing bash in running processes
+
+ps -auxf | grep bash
