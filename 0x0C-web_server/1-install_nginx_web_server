@@ -1,34 +1,15 @@
 #!/usr/bin/env bash
-# install nginx
-
-# Update packages
-apt-get update
-
 # Install nginx
-apt-get install -y nginx
 
-# Configure nginx to listen on port 80
-echo "server {
-        listen 80 default_server;
-	listen [::]:80 default_server;
+apt-get update
+apt-get install nginx -y
 
-	root /var/www/html;
-	index index.html index.htm index.nginx-debian.html;
-
-	server_name _;
-
-	location / {
-	        # Return Hello World! when root is requested
-		return 200 'Hello, World!';
-	}
-
-	# Error pages
-	error_page 404 /404.html;
-	error_page 500 502 503 504 /50x.html;
-	location = /50x.html {
-	        root /usr/share/nginx/html;
-	}
-}" > /etc/nginx/sites-available/default
+# Set nginx to listen on port 80
+sed -i 's/listen\s*80;/listen 80 default_server;/g' /etc/nginx/sites-available/default
 
 # Restart nginx
-service nginx restart
+kill $(cat /var/run/nginx.pid)
+nginx -g 'daemon off;' &
+
+# Create index.html file with "Hello World!" message
+echo "Hello World!" > /var/www/html/index.html
