@@ -16,8 +16,8 @@ frontend http-in
 
 backend webservers
     balance roundrobin
-    server web-01 [STUDENT_ID]-web-01:80 check
-    server web-02 [STUDENT_ID]-web-02:80 check
+    server web-01 03-web-01:80 check
+    server web-02 03-web-02:80 check
 EOT
 
 # Restart HAproxy service
