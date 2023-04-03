@@ -14,8 +14,8 @@ sudo bash -c 'echo "frontend load_balancer
 backend webservers
   mode http
   balance roundrobin
-  server web-01 [STUDENT_ID]-web-01:80 check
-  server web-02 [STUDENT_ID]-web-02:80 check" >> /etc/haproxy/haproxy.cfg'
+  server web-01 03-web-01:80 check
+  server web-02 03-web-02:80 check" >> /etc/haproxy/haproxy.cfg'
 
 # Enable HAProxy to be managed via an init script
 sudo sed -i 's/ENABLED=0/ENABLED=1/' /etc/default/haproxy
