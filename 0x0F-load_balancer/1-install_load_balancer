@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-
 # Update the packages on the machine
-apt-get update
+sudo apt-get update
 
 # Install HAproxy
-apt-get -y install haproxy
+sudo apt-get -y install haproxy
 
 # Backup the default HAproxy configuration file
 cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
