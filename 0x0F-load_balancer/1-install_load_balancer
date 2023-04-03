@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
-# Update the packages on the machine
+# Update the package lists
 sudo apt-get -y update
 
-# Install HAproxy
+# Install HAProxy
 sudo apt-get -y install haproxy
 
-# Backup the default HAproxy configuration file
-cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
-
-# Configure HAproxy to use round-robin algorithm to distribute requests to web-01 and web-02
-cat <<EOT >> /etc/haproxy/haproxy.cfg
-frontend http-in
-    bind *:80
-    default_backend webservers
+# Configure HAProxy to send traffic to web-01 and web-02
+sudo bash -c 'echo "frontend load_balancer
+  bind *:80
+  mode http
+  default_backend webservers
 
 backend webservers
-    balance roundrobin
-    server web-01 03-web-01:80 check
-    server web-02 03-web-02:80 check
-EOT
+  mode http
+  balance roundrobin
+  server web-01 [STUDENT_ID]-web-01:80 check
+  server web-02 [STUDENT_ID]-web-02:80 check" >> /etc/haproxy/haproxy.cfg'
 
-# Restart HAproxy service
-systemctl restart haproxy.service
+# Enable HAProxy to be managed via an init script
+sudo sed -i 's/ENABLED=0/ENABLED=1/' /etc/default/haproxy
+
+# Restart HAProxy service
+sudo service haproxy restart
