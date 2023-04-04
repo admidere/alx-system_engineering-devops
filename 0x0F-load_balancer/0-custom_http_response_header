@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
-# Update packages and install Nginx
+# Update the package index
 sudo apt-get -y update
 
 # Install Nginx
 sudo apt-get -y install nginx
 
-# Add custom header to HTTP response
-sudo sed -i "/listen 80 default_server;/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-available/default
+# Update the hostname
+echo "web-02" | sudo tee /etc/hostname
 
-# Restart Nginx service
-service nginx restart
+# Update the hosts file
+sudo sed -i 's/127.0.1.1.*/127.0.1.1\tweb-02/g' /etc/hosts
+
+# Edit the Nginx configuration file
+sudo sed -i 's/# server_name/server_name/g' /etc/nginx/sites-available/default
+sudo sed -i '/server_name/a add_header X-Served-By $hostname;' /etc/nginx/sites-available/default
+
+# Restart Nginx
+sudo service nginx restart
