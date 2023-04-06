@@ -3,8 +3,8 @@
 if ! command -v nginx &> /dev/null
 then
     echo "Nginx is not installed. Installing now..."
-    sudo apt update
-    sudo apt install nginx -y
+    sudo apt-get -y update
+    sudo apt-get install nginx -y
 fi
 
 # Get the list of active IPv4 addresses on the server
