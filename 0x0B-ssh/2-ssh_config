@@ -3,7 +3,7 @@
 # a server without typing a password.
 
 Host myserver
-    Hostname 100.25.179.21
+    Hostname 54.157.140.106
     User ubuntu
     IdentityFile ~/.ssh/school
     PasswordAuthentication no
