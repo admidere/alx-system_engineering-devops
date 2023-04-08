@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
 # Update package list and install Nginx webserver
 
-susudo apt-get update -y
-sudo apt-get install -y nginx
-echo 'Hello World!' > /var/www/html/index.html
-sudo service nginx start
+# Install nginx
+sudo apt-get update
+sudo apt-get install nginx -y
+
+# Configure nginx
+sudo echo "server {
+    listen 80;
+    location / {
+        echo 'Hello World!';
+    }
+}" > /etc/nginx/sites-available/default
+
+# Restart nginx
+sudo service nginx restart
