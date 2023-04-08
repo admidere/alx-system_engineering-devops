@@ -4,11 +4,12 @@
 
 sudo apt-get update -y
 sudo apt-get install -y nginx
-echo "Hello World!" | sudo tee /var/www/html/index.html
 
-sudo sed -i "/^server {/a \\
-	location /redirect_me { \\
-		return 301 \"https://www.youtube.com/watch?v=QH2-TGUlwu4/\"; \\
-	}" /etc/nginx/sites-available/default
+# Create a backup of the default Nginx configuration file
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.backup
 
+# Edit the default configuration file to add the redirect
+sudo sed -i 's/location \/ {/location \/ {\n\tlocation \/redirect_me {\n\t\treturn 3n: https://www.youtube.com/watch?v=QH2-TGUlwu4\/admidere.tech;\n\t}\n/g' /etc/nginx/sites-available/default
+
+# Restart Nginx to apply the changes
 sudo service nginx restart
