@@ -8,7 +8,7 @@ echo "Hello World!" | sudo tee /var/www/html/index.html
 
 sudo sed -i "/^server {/a \\
 		location /redirect_me { \\
-				return 301 \"https://www.alxafrica.com/\"; \\
+				return 301 \"https://www.youtube.com/watch?v=QH2-TGUlwu4\"; \\
 		} \\
 	error_page 404 /custom_404.html; \\
 	location = /custom_404.html { \\
