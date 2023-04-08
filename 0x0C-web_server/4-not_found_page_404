@@ -5,7 +5,6 @@
 sudo apt-get update -y
 sudo apt-get install -y nginx
 echo "Hello World!" | sudo tee /var/www/html/index.html
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/custom_404.html
 
 sudo sed -i "/^server {/a \\
 		location /redirect_me { \\
@@ -17,4 +16,5 @@ sudo sed -i "/^server {/a \\
 			internal; \\
 		}" /etc/nginx/sites-available/default
 
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/custom_404.html
 sudo service nginx restart
