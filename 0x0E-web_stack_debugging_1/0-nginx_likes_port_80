@@ -1,4 +1,21 @@
 #!/usr/bin/env bash
 # configures /etc/nginx/sites-enabled/default file from 8080 to 80:
-sed -i "s/8080/80/g" /etc/nginx/sites-enabled/default
-service nginx restart
+# Check if Nginx is running and start it if not
+if ! pgrep -x "nginx" > /dev/null
+then
+    /usr/sbin/nginx &
+fi
+
+# Check if Nginx is listening on port 80 for all active IPv4 IPs
+IPS=$(ip -o -4 addr list | awk '{print $4}' | cut -d/ -f1)
+for IP in $IPS
+do
+    if ! lsof -i:$IP > /dev/null
+    then
+        # Modify Nginx configuration file to listen on port 80 for the current IP
+        sed -i "s/listen  .*/listen  $IP:80;/" /etc/nginx/sites-enabled/default
+    fi
+done
+
+# Reload Nginx configuration
+/usr/sbin/nginx -s reload
