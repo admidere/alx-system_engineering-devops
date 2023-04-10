@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
-# Update package lists and install Nginx
-sudo apt-get update
-sudo apt-get install nginx -y
-
-# Configure Nginx to listen on port 80 of all active IPv4 IPs
-sudo sed -i 's/listen\s*80;/listen 0.0.0.0:80;/g' /etc/nginx/sites-available/default
-
-# Restart Nginx to apply the configuration changes
-sudo service nginx restart
+# configures /etc/nginx/sites-enabled/default file from 8080 to 80:
+sed -i "s/8080/80/g" /etc/nginx/sites-enabled/default
+service nginx restart
