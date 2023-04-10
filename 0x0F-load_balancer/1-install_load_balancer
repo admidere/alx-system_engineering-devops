@@ -12,8 +12,8 @@ echo "frontend web-frontend
 backend web-backend
     mode http
     balance roundrobin
-    server 105044-web-01:80 check
-    server 105044-web-02:80 check" > /etc/haproxy/haproxy.cfg
+    server 105044-web-01 100.25.177.190:80 check
+    server 105044-web-02 3.83.18.123:80 check" > /etc/haproxy/haproxy.cfg
 
 # Enable HAproxy init script
 sed -i 's/ENABLED=0/ENABLED=1/' /etc/default/haproxy
