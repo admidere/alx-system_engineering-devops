@@ -1,17 +1,5 @@
 #!/usr/bin/env bash
-# configures /etc/nginx/sites-enabled/default file from 8080 to 80:
-# Start Nginx if it's not running
-if ! pgrep nginx > /dev/null; then
-    nginx
-fi
+# Debug what’s keeping the Ubuntu container’s Nginx installation from listening on port 80
 
-# Modify Nginx configuration to listen on port 80 for all active IPv4 IPs
-IPS=$(ip -o -4 addr list | awk '{print $4}' | cut -d/ -f1)
-for IP in $IPS; do
-    if ! grep -q "listen $IP:80;" /etc/nginx/sites-enabled/default; then
-        sed -i "s/listen  .*/listen  $IP:80;/" /etc/nginx/sites-enabled/default
-    fi
-done
-
-# Reload Nginx configuration
-nginx -s reload
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+service nginx restart
