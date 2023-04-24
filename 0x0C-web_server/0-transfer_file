@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This script transfers a file from a client to a server using SCP.
 # The script accepts 4 parameters:
 # - The path to the file to be transferred
