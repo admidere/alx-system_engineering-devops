@@ -1,23 +1,31 @@
 #!/usr/bin/env bash
-# Install nginx on your Ubuntu machine
 
-if [ -x "$(command -v nginx)" ]; then
-  echo "Nginx is already installed, skipping installation and configuration."
-else
+# Install Nginx if not already installed
+if ! [ -x "$(command -v nginx)" ]; then
   sudo apt update
   sudo apt install -y nginx
 fi
 
-# Configure Nginx to redirect requests to /redirect_me to another page
-sudo bash -c 'cat > /etc/nginx/sites-available/default <<EOF
+# Create the redirect configuration file
+sudo tee /etc/nginx/sites-available/redirect_me << EOF
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
+    listen 80;
+    listen [::]:80;
+
+    server_name _;
+
     location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4$ permanent;
+        return 301 https://www.example.com/;
     }
 }
-EOF'
+EOF
 
-# Restart Nginx
+# Enable the redirect configuration
+sudo ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
+
+# Remove the default Nginx configuration
+sudo rm /etc/nginx/sites-enabled/default
+
+# Test the configuration and restart Nginx
+sudo nginx -t
 sudo service nginx restart
