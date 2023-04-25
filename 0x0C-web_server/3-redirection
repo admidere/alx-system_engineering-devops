@@ -1,14 +1,27 @@
 #!/usr/bin/env bash
-# Configure Nginx server so that /redirect_me is redirecting to another page.
-# The redirection must be a “301 Moved Permanently”
+# Install nginx if not already installed
+if [ ! -x "$(command -v nginx)" ]; then
+  sudo apt update
+  sudo apt install -y nginx
+fi
 
-sudo apt-get update -y
-sudo apt-get install -y nginx
+# Configure nginx to redirect /redirect_me to https://www.youtube.com/watch?v=QH2-TGUlwu4
+sudo tee /etc/nginx/sites-available/redirect_me <<EOF
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    # Redirect /redirect_me to https://www.youtube.com/watch?v=QH2-TGUlwu4 with a 301 status code
+    return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4$request_uri;
+}
+EOF
+
+# Enable the new configuration
+sudo ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
+
+# Add "Hello World!" to the default index.html file
 echo "Hello World!" | sudo tee /var/www/html/index.html
 
-sudo sed -i "/^server {/a \\
-	location /redirect_me { \\
-		return 301 \"https://www.alxafrica.com/\"; \\
-	}" /etc/nginx/sites-available/default
-
+# Test the configuration and restart nginx
+sudo nginx -t
 sudo service nginx restart
