@@ -1,32 +1,24 @@
-# Install and configure Nginx web server using puppet
+# Setup New Ubuntu server with nginx
 
-# update apt packages
-exec { 'update packages':
-  command => '/usr/bin/apt-get update',
+exec { 'update system':
+        command => '/usr/bin/apt-get update',
 }
 
-# Install Nginx package
-package { 'install nginx':
-  ensure => installed,
+package { 'nginx':
+	ensure => 'installed',
+	require => Exec['update system']
 }
 
-# Create configuration file
-file { '/var/www/index.html':
-  content => 'Hello World!'
+file {'/var/www/html/index.html':
+	content => 'Hello World!'
 }
 
-# redirect
 exec {'redirect_me':
-  command  => 'sed -i "24i\	rewrite ^/redirect_me  https://www.youtube.com/watch?v=QH2-TGUlwu4/;" /etc/nginx/sites-available/default',
-  provider => 'shell'
+	command => 'sed -i "24i\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default',
+	provider => 'shell'
 }
 
-# create symbolic link to enable the virtual host
-file { '/etc/nginx/sites-enabled/default':
-  ensure => 'link',
-}
-
-#Restart the Nginx service
-service { 'nginx':
-  ensure  => running
+service {'nginx':
+	ensure => running,
+	require => Package['nginx']
 }
