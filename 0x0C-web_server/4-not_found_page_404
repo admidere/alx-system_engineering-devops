@@ -27,6 +27,7 @@ server {
         internal;
         add_header Content-Type text/html;
         add_header ETag "58acb50e-1a";
+        root /var/www/html;
     }
 }
 EOF'
