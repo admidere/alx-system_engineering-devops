@@ -32,5 +32,3 @@ class nginx_server {
     require => File['/etc/nginx/sites-available/default'],
   }
 }
-
-include nginx_server
