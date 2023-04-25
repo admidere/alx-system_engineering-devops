@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Install nginx on your web server if it is not already installed
+if [ ! -x "$(command -v nginx)" ]; then
+  sudo apt update
+  sudo apt install -y nginx
+fi
+
+# Configure Nginx to have a custom 404 error page with the string "Ceci n'est pas une page"
+sudo bash -c 'cat > /etc/nginx/sites-available/default <<EOF
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+        echo "Ceci n'est pas une page";
+    }
+}
+EOF'
+
+# Add Hello World! to the default index.html file
+echo "Hello World!" | sudo tee /var/www/html/index.html
+
+# Restart Nginx
+sudo service nginx restart
