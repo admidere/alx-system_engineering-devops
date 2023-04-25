@@ -9,5 +9,9 @@ fi
 sudo sed -i 's/# server_name_in_redirect off;/server_name_in_redirect off;/' /etc/nginx/nginx.conf
 sudo sed -i '33 a \\trewrite ^/redirect_me$ https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
 
+
+# Add "Hello World!" to the default index.html file
+echo "Hello World!" | sudo tee /var/www/html/index.html
+
 # Restart Nginx
 sudo service nginx restart
