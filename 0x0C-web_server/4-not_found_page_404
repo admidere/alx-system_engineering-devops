@@ -5,23 +5,32 @@ if [ ! -x "$(command -v nginx)" ]; then
   sudo apt install -y nginx
 fi
 
-# Configure Nginx to have a custom 404 error page with the string "Ceci n'est pas une page"
-sudo bash -c 'cat > /etc/nginx/sites-available/default <<EOF
+# Add "Ceci n'est pas une page" to the custom 404.html file
+sudo bash -c 'cat <<EOF > /var/www/html/404.html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>404 Not Found</title>
+</head>
+<body>
+  <h1>404 Not Found</h1>
+  <p>Ceci n'est pas une page</p>
+</body>
+</html>
+EOF'
+
+# Configure Nginx to use the custom 404 page
+sudo bash -c 'cat <<EOF > /etc/nginx/sites-available/default
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
-
-    root /var/www/html;
+    server_name _;
     error_page 404 /404.html;
     location = /404.html {
         internal;
-        echo "Ceci n'est pas une page";
     }
 }
 EOF'
-
-# Add Hello World! to the default index.html file
-echo "Hello World!" | sudo tee /var/www/html/index.html
 
 # Restart Nginx
 sudo service nginx restart
