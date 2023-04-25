@@ -1,36 +1,36 @@
 #!/usr/bin/env bash
+
 # Install nginx on your web server if it is not already installed
 if [ ! -x "$(command -v nginx)" ]; then
   sudo apt update
   sudo apt install -y nginx
 fi
 
-# Add "Ceci n'est pas une page" to the custom 404.html file
-sudo bash -c 'cat <<EOF > /var/www/html/404.html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>404 Not Found</title>
-</head>
-<body>
-  <h1>404 Not Found</h1>
-  <p>Ceci n'est pas une page</p>
-</body>
-</html>
-EOF'
-
-# Configure Nginx to use the custom 404 page
+# Configure Nginx to have a custom 404 page
 sudo bash -c 'cat <<EOF > /etc/nginx/sites-available/default
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html;
+
     server_name _;
+
     error_page 404 /404.html;
     location = /404.html {
         internal;
+        return 404 "Ceci n'\''est pas une page";
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
     }
 }
 EOF'
+
+# Create the custom 404 page
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
 
 # Restart Nginx
 sudo service nginx restart
