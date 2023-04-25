@@ -1,27 +1,32 @@
 # Install and configure Nginx web server using puppet
 
-exec { 'install_nginx':
-  command => 'apt-get update && apt-get install -y nginx',
-  unless  => 'which nginx',
+# update apt packages
+exec { 'update packages':
+  command => '/usr/bin/apt-get update',
 }
 
-exec { 'create_index_file':
-  command => 'echo "Hello World!" > /var/www/html/index.html',
-  require => Exec['install_nginx'],
+# Install Nginx package
+package { 'install nginx':
+  ensure => installed,
 }
 
-exec { 'create_redirect':
-  command => 'echo "server { listen 80 default_server; listen [::]:80 default_server; server_name _; return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4$request_uri; }" > /etc/nginx/sites-available/default',
-  require => Exec['install_nginx'],
+# Create configuration file
+file { '/var/www/index.html':
+  content => 'Hello World!'
 }
 
-exec { 'enable_redirect':
-  command => 'ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/',
-  require => Exec['create_redirect'],
+# redirect
+exec {'redirect_me':
+  command  => 'sed -i "24i\	rewrite ^/redirect_me  https://www.youtube.com/watch?v=QH2-TGUlwu4/;" /etc/nginx/sites-available/default',
+  provider => 'shell'
 }
 
+# create symbolic link to enable the virtual host
+file { '/etc/nginx/sites-enabled/default':
+  ensure => 'link',
+}
+
+#Restart the Nginx service
 service { 'nginx':
-  ensure => running,
-  enable => true,
-  require => [Exec['create_index_file'], Exec['enable_redirect']],
+  ensure  => running
 }
