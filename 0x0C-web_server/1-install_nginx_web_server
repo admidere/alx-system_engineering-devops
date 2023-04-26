@@ -24,7 +24,7 @@ fi
 if grep -q "Hello World!" /var/www/html/index.html; then
     echo "HTML file already contains 'Hello World!' message."
 else
-    echo "<html><body><h1>Hello World!</h1></body></html>" | sudo tee /var/www/html/index.html
+    echo "Hello World!" | sudo tee /var/www/html/index.html
 fi
 
 # Test Nginx configuration by querying it at root
