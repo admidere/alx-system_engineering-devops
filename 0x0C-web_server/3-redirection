@@ -17,7 +17,7 @@ if [ ! -f /var/www/html/index.html ]; then
 fi
 
 # Setting up /redirect_me to a youtube video
-sudo sed -i '24i\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
+sudo sed -i '/^server {/a \    location \/redirect_me {\n        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;\n    }' /etc/nginx/sites-available/default
 
 # Restart Nginx without using systemctl
 sudo service nginx restart
