@@ -1,25 +1,35 @@
 #!/usr/bin/env bash
 # Install nginx on your web-01
 
-# Update package list and install nginx
-sudo apt-get update
-sudo apt-get install nginx -y
-
-# Configure nginx to listen on port 80
-sudo sed -i 's/listen\s*80;/listen 80 default_server;/g' /etc/nginx/sites-available/default
-
-# Restart nginx
-sudo service nginx restart
-
-# Create index.html file with "Hello World!" message
-echo "Hello World!" | sudo tee /var/www/html/index.html
-
-# Test nginx by querying it at its root with curl
-curl -s http://localhost:80 | grep "Hello World!" > /dev/null
-
-# Check if curl command was successful
-if [ $? -eq 0 ]; then
-  echo "Nginx successfully installed and configured!"
+# Check if Nginx is already installed
+if [ $(dpkg-query -W -f='${Status}' nginx 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+    echo "Nginx is already installed."
 else
-  echo "Nginx installation and configuration failed."
+    # Update packages and install Nginx
+    sudo apt-get update
+    sudo apt-get install nginx -y
+fi
+
+# Check if Nginx is already configured to listen on port 80
+if grep -q "listen 80" /etc/nginx/sites-available/default; then
+    echo "Nginx is already configured to listen on port 80."
+else
+    # Configure Nginx to listen on port 80
+    sudo sed -i 's/listen\ 80\ default_server/listen\ 80/' /etc/nginx/sites-available/default
+    # Restart Nginx
+    sudo service nginx restart
+fi
+
+# Create a test HTML file with "Hello World!" message
+if grep -q "Hello World!" /var/www/html/index.html; then
+    echo "HTML file already contains 'Hello World!' message."
+else
+    echo "<html><body><h1>Hello World!</h1></body></html>" | sudo tee /var/www/html/index.html
+fi
+
+# Test Nginx configuration by querying it at root
+if curl -s http://localhost | grep -q "Hello World!"; then
+    echo "Nginx is installed and configured correctly."
+else
+    echo "Nginx is installed but not configured correctly."
 fi
