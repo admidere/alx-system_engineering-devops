@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
-# Install nginx on your web server if it is not already installed
-if [ ! -x "$(command -v nginx)" ]; then
-  sudo apt update
-  sudo apt install -y nginx
+# Install nginx on your web-01
+# Check if Nginx is installed
+if ! command -v nginx &> /dev/null; then
+    # Update package lists and install Nginx
+    sudo apt-get update
+    sudo apt-get install -y nginx
 fi
 
-# Configure Nginx to redirect /redirect_me to https://www.youtube.com/watch?v=QH2-TGUlwu4 with a 301 Moved Permanently response
-sudo bash -c 'cat <<EOF > /etc/nginx/sites-available/default
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-    server_name _;
-    return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4$request_uri;
-}
-EOF'
+# Configure Nginx to listen on port 80
+sudo sed -i 's/listen 80 default_server;/listen 80;/g' /etc/nginx/sites-available/default
 
-# Add "Hello World!" to the default index.html file
-echo "Hello World!" | sudo tee /var/www/html/index.html
+# Check if the custom index.html file exists
+if [ ! -f /var/www/html/index.html ]; then
+    # Create a custom index.html file with the "Hello World!" content
+    echo "Hello World!" | sudo tee /var/www/html/index.html
+fi
 
-# Restart Nginx
+# Setting up /redirect_me to a youtube video
+sudo sed -i '24i\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
+
+# Restart Nginx without using systemctl
 sudo service nginx restart
