@@ -18,7 +18,7 @@ fi
 
 # Set up /redirect_me to a YouTube video if it doesn't exist
 if ! sudo grep -q "location \/redirect_me" /etc/nginx/sites-available/default; then
-    sudo sed -i '/^server {/a \    location \/redirect_me {\n        return 301 https:\/\/www.youtube.com\/watch?v=QH2-TGUlwu4;\n        add_header Cache-Control "no-cache, no-store, must-revalidate";\n        add_header Pragma "no-cache";\n        expires 0;\n    }' /etc/nginx/sites-available/default
+    sudo sed -i '/^server {/a \    location \/redirect_me {\n        return 301 https:\/\/www.youtube.com\/watch?v=QH2-TGUlwu4;
 fi
 
 # Restart Nginx without using systemctl
