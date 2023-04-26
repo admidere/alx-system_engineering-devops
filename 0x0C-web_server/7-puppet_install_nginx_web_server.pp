@@ -1,27 +1,24 @@
-# Install and configure Nginx web server using puppet
+# Setup New Ubuntu server with nginx
 
-exec { 'install_nginx':
-  command => 'apt-get update && apt-get install -y nginx',
-  unless  => 'which nginx',
+exec { 'update system':
+        command => '/usr/bin/apt-get update',
 }
 
-exec { 'create_index_file':
-  command => 'echo "Hello World!" > /var/www/html/index.html',
-  require => Exec['install_nginx'],
+package { 'nginx':
+	ensure => 'installed',
+	require => Exec['update system']
 }
 
-exec { 'create_redirect':
-  command => 'echo "server { listen 80 default_server; listen [::]:80 default_server; server_name _; return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4$request_uri; }" > /etc/nginx/sites-available/default',
-  require => Exec['install_nginx'],
+file {'/var/www/html/index.html':
+	content => 'Hello World!'
 }
 
-exec { 'enable_redirect':
-  command => 'ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/',
-  require => Exec['create_redirect'],
+exec {'redirect_me':
+	command => 'sed -i "24i\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default',
+	provider => 'shell'
 }
 
-service { 'nginx':
-  ensure => running,
-  enable => true,
-  require => [Exec['create_index_file'], Exec['enable_redirect']],
+service {'nginx':
+	ensure => running,
+	require => Package['nginx']
 }
