@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
 # Install nginx on your web-01
 
-if [ -x "$(command -v nginx)" ]; then
-  echo "Nginx is already installed, skipping installation and configuration."
+# Update package list and install nginx
+sudo apt-get update
+sudo apt-get install nginx -y
+
+# Configure nginx to listen on port 80
+sudo sed -i 's/listen\s*80;/listen 80 default_server;/g' /etc/nginx/sites-available/default
+
+# Restart nginx
+sudo kill -s HUP $(cat /var/run/nginx.pid)
+
+# Create index.html file with "Hello World!" message
+echo "Hello World!" | sudo tee /var/www/html/index.html
+
+# Test nginx by querying it at its root with curl
+curl -s http://localhost:80 | grep "Hello World!" > /dev/null
+
+# Check if curl command was successful
+if [ $? -eq 0 ]; then
+  echo "Nginx successfully installed and configured!"
 else
-  # Update package list and install Nginx
-  sudo apt update
-  sudo apt install -y nginx
-
-  # Configure Nginx to listen on port 80
-  sudo sed -i 's/listen\s*80;/listen 80 default_server;/g' /etc/nginx/sites-available/default
-
-  # Restart Nginx
-  sudo service nginx restart
-
-  # Create default index.html file with "Hello World!" message
-  echo "Hello World!" | sudo tee /var/www/html/index.html
+  echo "Nginx installation and configuration failed."
 fi
