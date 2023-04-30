@@ -13,8 +13,8 @@ frontend http_front
 backend http_back
     mode http
     balance roundrobin
-    server web-01 105044-web-01:80 check
-    server web-02 105044-web-02:80 check
+    server 105044-web-01 18.207.2.134:80 check
+    server 105044-web-02 100.25.152.180:80 check
 EOF
 
 # Enable HAproxy init script
