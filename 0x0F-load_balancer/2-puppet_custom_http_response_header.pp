@@ -1,26 +1,39 @@
+# Ensure the 'apt' module is installed
+exec { 'install_apt_module':
+  command => 'puppet module install puppetlabs-apt',
+  path    => '/usr/bin:/usr/sbin:/bin:/sbin',
+  unless  => 'puppet module list | grep -q puppetlabs-apt',
+}
+
+# Update package lists
+class { 'apt':
+  update => {
+    frequency => 'daily',
+  },
+  require => Exec['install_apt_module'],
+}
+
 # Install Nginx
-class { 'nginx': }
-
-# Add custom header X-Served-By with the server's hostname
-nginx::config::vhost { 'default':
-  ensure => present,
-  content => template('nginx/default.conf.erb'),
+class { 'nginx':
+  manage_repo    => true,
+  package_source => 'nginx-mainline',
+  require        => Class['apt::update'],
 }
 
-file { '/etc/nginx/default.conf':
-  ensure => present,
-  content => template('nginx/default.conf.erb'),
-  notify => Service['nginx'],
-}
-
-# Define custom fact for the server's hostname
-Facter.add('server_hostname') do
-  setcode do
-    Facter::Core::Execution.execute('hostname')
-  end
-end
-
-# Add custom header to Nginx configuration
-nginx::resource::server_header { 'X-Served-By':
-  value => $::server_hostname,
+# Configure Nginx with custom header
+nginx::resource::server { 'default':
+  listen_options => 'default_server',
+  www_root       => '/var/www/html',
+  index_files    => ['index.html'],
+  use_default_location => false,
+  locations      => {
+    '/' => {
+      location => '/',
+      index_files => ['index.html'],
+      custom_cfg => {
+        'add_header' => 'X-Served-By $hostname',
+      },
+    },
+  },
+  require        => Class['nginx'],
 }
