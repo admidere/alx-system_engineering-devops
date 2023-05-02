@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Update package lists and install Nginx if not already installed
+sudo apt-get update
+sudo apt-get install -y nginx
+
+# Ensure Nginx is configured to listen on port 80
+sudo sed -i 's/listen\(.*\);/listen 80;/g' /etc/nginx/sites-available/default
+
+# Stop any other processes using port 80
+sudo fuser -k 80/tcp
+
+# Start Nginx if it's not running
+sudo service nginx start
+
+# Enable Nginx to start on boot
+sudo update-rc.d nginx defaults
+
+# Check if UFW is installed and allow port 80 if it is
+if command -v ufw > /dev/null; then
+  sudo ufw allow 80/tcp
+fi
+
+# Restart Nginx to apply changes
+sudo service nginx restart
+
+# Check if Nginx is running and listening on port 80
+sudo netstat -tuln | grep 80

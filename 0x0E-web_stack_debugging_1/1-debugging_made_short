@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# made short and sweet for debug issue
+sudo apt-get update && sudo apt-get install -y nginx
+sudo sed -i 's/listen\(.*\);/listen 80;/g' /etc/nginx/sites-available/default
+sudo fuser -k 80/tcp && sudo service nginx start

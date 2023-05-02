@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Stop Nginx service
+sudo service nginx stop
+
+# Remove Nginx and its configuration files
+sudo apt-get purge -y nginx nginx-common nginx-full
+
+# Remove any remaining configuration files
+sudo rm -rf /etc/nginx
+
+# Remove the custom index.html file
+sudo rm -f /var/www/html/index.html
+
+# Remove any unused packages and dependencies
+sudo apt-get autoremove -y
+
+# Clean up the package cache
+sudo apt-get clean
