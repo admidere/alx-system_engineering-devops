@@ -33,19 +33,17 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
-frontend admidere-frontend
-        bind *:80
-        mode http
-        http-request redirect scheme https code 301 unless { ssl_fc }
-        http-request set-header X_Forwarded-Proto http
-        default_backend admidere-backend
+frontend http-in
+    bind *:80
+    bind *:443 ssl crt /etc/letsencrypt/live/www.admidere.tech/haproxy.pem
+    mode http
+    default_backend servers
 
-frontend admidere-frontend-https
-        bind *:443 ssl crt /etc/haproxy/certs/admidere.tech.pem
-        http-request set-header X-Forwarded-Proto https
-        default_backend admidere-backend
-
-backend admidere-backend
-        balance roundrobin
-        server 105044-web-01 18.207.2.134:80 check
-        server 105044-web-02 100.25.152.180:80 check
+backend servers
+    mode http
+    balance roundrobin
+    option forwardfor
+    http-request set-header X-Forwarded-Port %[dst_port]
+    http-request add-header X-Forwarded-Proto https if { ssl_fc }
+    server 105044-web-01 18.207.2.134:80 check
+    server 105044-web-02 100.25.152.180:80 check
