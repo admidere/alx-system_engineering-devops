@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Stop the HAProxy service
+sudo systemctl stop haproxy
+
+# Remove the HAProxy package
+sudo apt-get remove --purge -y haproxy
+
+# Remove any remaining configuration files
+sudo rm -rf /etc/haproxy
