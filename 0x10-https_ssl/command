@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+sudo apt-get update
+sudo apt install snapd
+sudo apt-get remove certbot
+sudo apt-get install certbot
+sudo certbot certonly --standalone --preferred-challenges http -d www.admidere.tech --email admasud89@gmail.com --agree-tos --no-eff-email
+sudo cat /etc/letsencrypt/live/www.admidere.tech/fullchain.pem /etc/letsencrypt/live/www.admidere.tech/privkey.pem | sudo tee /etc/letsencrypt/live/www.admidere.tech/haproxy.pem
+sudo systemctl restart haproxy
