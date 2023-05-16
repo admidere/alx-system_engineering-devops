@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
- Nginx is running as the nginx user.
+# Nginx is running as the nginx user.
 
 # Stop the existing Nginx service
 service nginx stop
