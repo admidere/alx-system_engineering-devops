@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
-# Nginx is running as the nginx user.
-
-# Stop the existing Nginx service
-service nginx stop
-
-# Update the Nginx configuration
-sed -i 's/user\s\+[^;]\+/user nginx;/' /etc/nginx/nginx.conf
-sed -i 's/listen\s\+80\s\+/listen 8080 /' /etc/nginx/sites-available/default
-sed -i 's/listen\s\+\[::\]:80\s\+/listen [::]:8080 /' /etc/nginx/sites-available/default
-
-# Restart Nginx
-service nginx start
+# Fixes server bug
+chmod 644 /etc/nginx/nginx.conf
+sed -Ei 's/\s*#?\s*user .*/user nginx;/' /etc/nginx/nginx.conf
+sed -Ei 's/(listen (\[::\]:)?80) /\180 /' /etc/nginx/sites-enabled/default
+pkill apache2
+# restart
+su nginx -s /bin/bash -c 'service nginx restart'
