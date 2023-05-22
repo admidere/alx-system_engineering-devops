@@ -7,6 +7,18 @@ import requests
 
 
 def get_employee_todo_progress(employee_id):
+    """
+    Retrieve and display the TODO list progress for a given employee ID.
+
+    Args:
+        employee_id (int): The ID of the employee.
+
+    Returns:
+        None
+
+    Raises:
+        None
+    """
     user_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
     todos_url = (f"https://jsonplaceholder.typicode.com/users/"
                  f"{employee_id}/todos")
@@ -33,6 +45,9 @@ def get_employee_todo_progress(employee_id):
 
 
 if __name__ == "__main__":
+    """
+    Entry point of the script.
+    """
     if len(sys.argv) != 2:
         print("Usage: python script.py <employee_id>")
         sys.exit(1)
