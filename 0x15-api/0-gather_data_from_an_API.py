@@ -30,6 +30,6 @@ if __name__ == "__main__":
     # Print out his/her todo list progress
     print("Employee {} is done with tasks({}/{}):"
           .format(employee_name, len(completed_tasks), len(todo_list)))
-    
+
     for task in completed_tasks:
         print("\t {}".format(task.get('title')))
