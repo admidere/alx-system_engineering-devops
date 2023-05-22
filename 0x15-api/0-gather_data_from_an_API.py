@@ -2,8 +2,8 @@
 """Python script that, using this REST API, for a given employee ID,
 returns information about his/her TODO"""
 
-import sys
 import requests
+import sys
 
 
 def get_employee_todo_progress(employee_id):
