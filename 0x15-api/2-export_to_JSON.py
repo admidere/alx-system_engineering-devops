@@ -38,7 +38,9 @@ if __name__ == "__main__":
     json_file = "{}.json".format(employee_id)
     formatted_tasks = []
     for task in todo_list:
-        formatted_tasks.append({"task": task.get('title'), "completed": task.get('completed'), "username": employee_name})
+        formatted_tasks.append({"task": task.get('title'),
+                                "completed": task.get('completed'),
+                                "username": employee_name})
 
     with open(json_file, 'w') as file:
         json.dump({employee_id: formatted_tasks}, file)
