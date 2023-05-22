@@ -3,13 +3,14 @@
     REST API for a given employee ID, returns information about his/her
     TODO listprogress.
 """
+
 import requests
 import sys
+
 
 if __name__ == "__main__":
     # Get employee id from command line
     employee_id = sys.argv[1]
-
 
     # Get information about the employee
     response = requests.get("https://jsonplaceholder.typicode.com/users/{}"
