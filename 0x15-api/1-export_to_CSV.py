@@ -3,8 +3,8 @@
     REST API for a given employee ID, returns information about his/her
     TODO list progress and exports the data in CSV format.
 """
-import requests
 import csv
+import requests
 import sys
 
 if __name__ == "__main__":
