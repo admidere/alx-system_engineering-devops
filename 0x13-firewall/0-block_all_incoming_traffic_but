@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#install the ufw firewall and setup a few rules on web-01
 # Check if UFW is installed
 if ! command -v ufw &> /dev/null; then
     # UFW is not installed, so install it
